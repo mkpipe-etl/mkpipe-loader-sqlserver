@@ -20,13 +20,14 @@ class SqlserverLoader:
         self.host = self.connection_params['host']
         self.port = self.connection_params['port']
         self.username = self.connection_params['user']
-        self.password = quote_plus(str(self.connection_params['password']))
+        # self.password = quote_plus(str(self.connection_params['password']))
+        self.password = str(self.connection_params['password'])
         self.database = self.connection_params['database']
 
         self.driver_name = 'sqlserver'
         self.driver_jdbc = 'com.microsoft.sqlserver.jdbc.SQLServerDriver'
         self.settings.driver_name = self.driver_name
-        self.jdbc_url = f'jdbc:{self.driver_name}://{self.host}:{self.port};databaseName={self.database};user={self.username};password={self.password}'
+        self.jdbc_url = f'jdbc:{self.driver_name}://{self.host}:{self.port};databaseName={self.database};user={self.username};password={self.password};encrypt=false;trustServerCertificate=false'
 
         config = load_config()
         connection_params = config['settings']['backend']
