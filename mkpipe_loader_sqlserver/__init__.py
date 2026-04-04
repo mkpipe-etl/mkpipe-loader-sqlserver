@@ -8,6 +8,7 @@ JAR_PACKAGES = ['com.microsoft.sqlserver:mssql-jdbc:12.8.1.jre11']
 class SqlserverLoader(JdbcLoader, variant='sqlserver'):
     driver_name = 'sqlserver'
     driver_jdbc = 'com.microsoft.sqlserver.jdbc.SQLServerDriver'
+    _dialect = 'sqlserver'
 
     def build_jdbc_url(self):
         password = unquote(self.password)

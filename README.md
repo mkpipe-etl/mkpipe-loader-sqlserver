@@ -43,6 +43,26 @@ pipelines:
 
 ---
 
+## Write Strategy
+
+Control how data is written to SQL Server:
+
+```yaml
+      - name: public.events
+        target_name: dbo.stg_events
+        write_strategy: upsert       # append | replace | upsert | merge
+        write_key: [id]              # required for upsert/merge
+```
+
+| Strategy | SQL Server Behavior |
+|---|---|
+| `append` | Plain `INSERT` via JDBC (default for incremental) |
+| `replace` | Drop and recreate table, then insert (default for full) |
+| `upsert` | `MERGE target USING temp ON ... WHEN MATCHED THEN UPDATE ... WHEN NOT MATCHED THEN INSERT ...;` |
+| `merge` | Same as upsert for SQL Server |
+
+---
+
 ## Write Parallelism & Throughput
 
 ```yaml
@@ -67,6 +87,8 @@ pipelines:
 | `replication_method` | `full` / `incremental` | `full` | Replication strategy |
 | `batchsize` | int | `10000` | Rows per JDBC batch insert |
 | `write_partitions` | int | — | Coalesce DataFrame to N partitions before writing |
+| `write_strategy` | string | — | `append`, `replace`, `upsert`, `merge` |
+| `write_key` | list | — | Key columns for upsert/merge (required) |
 | `dedup_columns` | list | — | Columns used for `mkpipe_id` hash deduplication |
 | `tags` | list | `[]` | Tags for selective pipeline execution |
 | `pass_on_error` | bool | `false` | Skip table on error instead of failing |
